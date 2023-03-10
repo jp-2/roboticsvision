@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <title>Robotic Vision</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <link rel="icon" href="favicon.ico"> 
+    
+    <!-- FontAwesome JS-->
+    <script defer src="https://use.fontawesome.com/releases/v5.7.1/js/all.js" integrity="sha384-eVEQC9zshBn0rFj4+TU78eNA19HMNigMviK/PU/FFjLXqa/GKPgX58rvt5Z8PLs7" crossorigin="anonymous"></script>
+    
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/monokai-sublime.min.css">
+    
+    <!-- Theme CSS -->  
+    <link id="theme-style" rel="stylesheet" href="assets/css/theme-1.css">
+    
+
+</head> 
+
+<body>
+    
+    <header class="header text-center">	    
+	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">Jorge Pulido's Blog</a></h1>
+        
+	    <nav class="navbar navbar-expand-lg navbar-dark" >
+           
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div id="navigation" class="collapse navbar-collapse flex-column" >
+				<div class="profile-section pt-3 pt-lg-0">
+				    <img class="profile-image mb-3 rounded-circle mx-auto" src="assets/images/profile.png" alt="image" >			
+					
+					<div class="bio mb-3">In this blog it is going to be shown the development of three algorithms. All of them are going to be develop using simulators from the Unibotics website.<br><a href="https://unibotics.org/">Find out more about Unibotics</a></div><!--//bio-->
+					
+			        <hr> 
+				</div><!--//profile-section-->
+				
+				<ul class="navbar-nav flex-column text-left">
+					<li class="nav-item">
+					    <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>Blog Home <span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item active">
+					    <a class="nav-link" href="blog-post-P1.html"><i class="fas fa-bookmark fa-fw mr-2"></i>Blog Post 1</a>
+					</li>
+                  	<li class="nav-item">
+					    <a class="nav-link" href="blog-post-P2.html"><i class="fas fa-bookmark fa-fw mr-2"></i>Blog Post 2</a>
+					</li>
+                  	<li class="nav-item">
+					    <a class="nav-link" href="blog-post-P3.html"><i class="fas fa-bookmark fa-fw mr-2"></i>Blog Post 3</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+    </header>
+    
+    <div class="main-wrapper">
+	    
+	    <article class="blog-post px-3 py-5 p-md-5">
+		    <div class="container">
+			    <header class="blog-post-header">
+				    <h2 class="title mb-2">Follow Line</h2>
+				    <div class="meta mb-3"><span class="date">Last Update 1 day ago</span><span class="time">15 min read</span></div>
+			    </header>
+			    
+			    <div class="blog-post-body">
+				    <figure class="blog-banner">
+				        <img class="img-fluid" src="assets/images/blog/blog-post-banner.jpg" alt="image">
+				    </figure>
+				    <p>In this post, I am going to talk about how I was developing and testing the algorithm from <a href="https://unibotics.org">Unibotics</a> called, <i>Follow Line</i></p>
+				    <p>This exercise consists of a car controlled by a camera, that has to follow a red line in the middle of a circuit.<br>
+                       Being able only to control two aspects of it. The Velocity and the Angular turn of the wheels.</p>
+				    
+				    <h3 class="mt-5 mb-3">Some musts about how robotic vision works</h3>
+				    <p>It is important to know some basics of this concrete system.<br>
+                       This system is a closed system in which a loop is executed every time, trying to get the <i>obtained error</i> minimize as much as possible.<br>
+                  	   The procedure is manage thanks to 3 controllers</p>
+				    <h5 class="my-3">Controllers:</h5>
+				    <ul class="mb-5">
+					  <li class="mb-2">Proportional (P): Correction is applied to the controlled variable is proportional to the difference between the desired value and the measured value, the error.</li>
+					  <li class="mb-2">Integral (I): The system is able to correct the error once it reachs a verge. Deleting the offset</li>
+					  <li class="mb-2">Derivative (D): When the error is minimizing is must be controlled in another way than when it is growing</li>
+					</ul>
+                  	
+                  	<h4 class="my-3">System development:</h4>
+                  	<p>Every system must be develop step by step, in order to get the best functionality possible.<br> From now on, I will be showing all this steps, but also, commenting my own experience through them.<br></p>
+                  	<p>Fist of all, is important to know from what detection is going to be obtained the error. Then it is time to go though the following steps:</p>	
+                  	<br>
+                  	<h5 class="my-3">Proportional controller:</h5>
+                  	<figure class="blog-banner">
+				        <img class="img-fluid" src="./assets/images/P1/P.png" alt="Image: P formula">
+                    </figure>  	 
+                  	<p>With this formula, we are going to set the angular velocity for the robot, it is important to set the value of <b>Kp</b> (Proportional constant).</p>
+                    <p>That constant multiplies by the <b>error</b> making the robot turns more or less sharply depending on the result of the formula above.</p>
+                  	<p>It is important to know how does the value of this constant affects: </p>
+                  	<ul class="mb-5">
+					  <li class="mb-2">The higher the value is, the sharp the oscillation of the robot.</li>
+					  <li class="mb-2">Meanwhile, if this value is low, the robot reaction might be late, and it will miss the line so often.</li>
+					</ul>
+                  	
+                  	<h5 class="my-3">Derivative controller:</h5>
+                  	<figure class="blog-banner">
+				        <img class="img-fluid" src="assets/images/P1/D.png" alt="Image: D formula">
+				    </figure>
+                    <p>In this case, we will have to set the value of <b>Kd</b> (Derivative constant).</p>
+                    <p>That constant is multiply by the derivative of the error, but, to set that derivative in python, we have to get the different between the error in the current frame, and the error in the previous one.</p>
+                  	<p>The obtained value makes the reaction of the robot to get a smoother oscillation if the derivative is low, on the other hand, if this value is high, the robot will oscillate roughly to mantain the route </p>
+                  	<br>
+                  	<h5 class="my-3">Proportional and Derivative controller:</h5>
+                  	<figure class="blog-banner">
+				        <img class="img-fluid" src="assets/images/P1/PD.png" alt="Image: PD formula">
+				    </figure>
+                  	<p>This is the controller formula used in this exercise. It is a combination of the two previous ones.</p>
+                  	<br>
+                  	<h5 class="my-3">Integral controller:</h5>
+                  	<figure class="blog-banner">
+				        <img class="img-fluid" src="assets/images/P1/I.png" alt="Image: I formula">
+				    </figure>
+                  	<p>In this case, we will have to set the value of <b>Ki</b> (Integral constant).</p>
+                  	<p>The performance of this formula is to delete offsets, if those offsets are mantained during some time to get to the point we want.</p>
+                  	<p>Calculate an integral in coding consists of a sum of the error for a period of time.</p>
+                  	<br>
+                  	<h5 class="my-3">The PID controller:</h5>
+                  	<figure class="blog-banner">
+				        <img class="img-fluid" src="assets/images/P1/PID.png" alt="Image: PID formula">
+				    </figure>
+                  	<p>This is the most complete PID system formula. It contains all the simple three ones.</p>
+                  	<br>
+                  	<p>With all this being said, the main goal is to set the values of the two constants of the PD formula, that minimize the error of the system.</p>
+					<br>
+                  	<h3 class="mt-5 mb-3">Algorithm development</h3>
+                  	<h5>How to obtain the image and preproccessing</h5>
+                  	<p>At first, when you get into <a href="https://unibotics.org">Unibotics</a>, <i>Follow line</i> exercise, you will see this code:</p>
+                  	<pre>
+                  		<code>
+from GUI import GUI
+from HAL import HAL
+while True:
+    HAL.getImage()
+    HAL.setW()
+    HAL.setV()
+    GUI.showImage()
+					    </code>
+                    </pre>
+                  	<p>In the code above we can see the basics to operate this exercise, as we have how to get the image, how to set angular velocity and velocity and how to return the image</p><!-- Q es un cirucito y tal bla bla obtener imgagne, primeras pruebas--->
+                  	<center>
+						<img class="img-fluid" src="assets/images/P1/LineaRoja.jpg" alt="Image: Default view">
+                  	</center>
+                  	<br>
+                  	<p>So, first of all is to obtain the path we want the car to follow, that is the red line in the middle.<br>
+                  	   We, as human beings, have the capacity to understand what we are seeing in most situations, specifically this one is very simple,
+                  	   but a computer or robot without any guidance does not know how to proceed. So, that is why, it is necessary to proceed as follows.</p>
+                 	<p>The next step is to extract only the red part(s) of the image, because the robot must follow one of them.<br>
+                  	   We will be covering the exceptions afterwards, like for example, what happens when there is no red line or the robot miss this reference?</p>
+                  	<br>
+                  	<center>
+						<img class="img-fluid" src="assets/images/P1/LineaRojaThreshold.jpg" alt="Image: Threshold view">
+                  	</center>
+                  	<br>
+                  	<p>Above is the threshold view of the circuit, it is clear to see what path the robot is following.</p>	
+                  	<br>
+                  	<center>
+						<img class="img-fluid" src="assets/images/P1/LineaRojaContorno.jpg" alt="Image: Contour line view">
+                  	</center>
+                  	<br>
+                  	<p>When the path is differentiated from the rest of the circuit, a good continue is to go back to the default view but now with the path countour drawn.</p>
+                  	<h5>Finding the reference point to get the error and apply the formula</h5>
+                  	<p>Now, it is time to look for some reference points, so that we can return the variable <b>error</b> for the PD formula.</p>	
+                  	<br>
+                  	<center>
+						<img class="img-fluid" src="assets/images/P1/centroide.jpg" alt="Image: Contour with centroid view">
+                  	</center>
+                  	<br>
+                  	<p>In the first try I decide to use the centroid of the contour as the reference to get the error in each loop, did not resulted as expected.<br>
+                       The robot reaction was always delayed, making the car oscillates a lot during even the straights parts of the circuit.</p>		
+                  	<br>
+                  	<center>
+						<img class="img-fluid" src="assets/images/P1/toppoint.jpg" alt="Image: Contour with top point view">
+                  	</center>
+                  	<br>
+                  	<p>In the next attemp, I decided to do the same as I did with the centroid but now, with the upper point of the contour, but did not work as well.<br>
+                       The problem with this reference point consists of the displacement of the car through the circuit, but also it has some problems with rapid oscillations.</p>	
+                  	<br>
+                  	<center>
+						<img class="img-fluid" src="assets/images/P1/midpoint.jpg" alt="Image: Contour with mid point view">
+                  	</center>
+                  	<br>
+                  	<p>Then, I decided to look for the point between the previous two, because this point is between the point when the robot is and the one the robot might go in the near future. </p>	
+                  	<!--<p></p>-->
+                  	<br>
+                  	<center>
+						<img class="img-fluid" src="assets/images/P1/lieaerror.jpg" alt="Image: Error represented view">
+                  	</center>
+                  	<br>
+                  	<p>I did the same process for the three points like the one shown now. The line is conected to the pixel of the middle of the frame, making the length of that line the error, which is used in the formula.<br>
+                       In summary, the longer the line is, the higher the error, and, that means, the value of the formula. On the other hand, if this length is short, the formula has a lower value making the robot get stable.</p>	
+                  	<p>At this point I was able to complete a lap at a constant low speed. So, it is time to develop how the speedometer is going to work.</p>
+                  	<h5>How robot velocity works</h5>
+                  	<!-- Robot sube velocidad -->
+                  	<p>Speed increase slowly when the difference between current frame error and the previous one is low. It increase faster when the actual error in the current frame is 0, in most cases that means the robot is in a straight line.<br>
+                  	   On the other hand, there are two cases. The first one, consist of decreasing speed when the difference in the last two frames error is high,
+                  	   it also has an even higher speed decrease, when the current error is too high, almost a quarter of pixels of the frame. Making the robot re-establish quicker, as expected. </p>
+                  	<div class="embed-responsive embed-responsive-16by9">
+					   <iframe width="560" height="315" src="https://www.youtube.com/embed/rZN6HS3yjkU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
+					</div>
+                  	<br>
+                  	<p>At the end, the robot achieve to stablish around a range of values by itself, and can manage to continue driving around the circuit indefinitely.</p>
+                  	
+                  	<h3 class="mt-5 mb-3">Experiments</h3>
+                  	<p>In this section of the post I am going to explain some problems and experiments I found during the development of the exercise.</p>								<!-- Posibles mejoras-->
+                  	<h4 class="mt-5 mb-3">Missing reference</h4>
+                  	<p>We all may think about what should happend in this situation, in my own, I found two different problems when it cames on missing reference.<br>
+                  	   Normally robot miss reference is caused by high oscillation or high speed, high oscillation can be solved adjusting the formula constants as much as we can, but speed depends on something else as shown.</p>
+                  	<ul class="mb-5">
+					  <li class="mb-2">
+                        <h5 class="mt-5 mb-3">Missing reference, not detecting any other red in the frame</h5>
+                  		<p>This is the easy case in which we can get involved. It is solved first of all, stopping the car and then by reviewing the last frame error value, making the car turns in its own place, until a new path detection is found.<br> 
+                       In this case, to avoid the robot lose reference again, the speed get reduce while there is no detection found. Making it possible to return to the path easily, and with less ocillations.</p>
+                  	  	<div class="embed-responsive embed-responsive-16by9">
+					   		<iframe width="560" height="315" src="https://www.youtube.com/embed/pJQtoGntQWM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
+						</div>
+                      </li>
+					  <li class="mb-2">
+                      	<h5 class="mt-5 mb-3">Missing reference but detecting some red in the frame</h5>
+                        <p> This case is similar to the one above but with little variation from the previous point.<br>
+                        	There can be along the circuit some little red spots, it is not the case of this exercise specifically, but as you can see in the image below a small red spot is detected.<br>
+                        	The solution for this was to look how small can the contour be in the worst situation, like a high deviation in a curve, and then avoiding the robot going to a point smaller than that.</p>
+                      	<br>
+                  		<center>
+                        	<img class="img-fluid" src="assets/images/P1/LineaRojaThresholdSmall.jpg" alt="Image: Threshold with a red small spot detected view">
+                  		</center>
+                    	</li>
+					</ul>
+                  	<h4 class="mt-5 mb-3">Constant speed</h4>
+                  	<p>In the video below, can be see a timelapse of a 5:30 minute ride around the circuit in a low speed.<br>
+                  	   The robot is able to keep a very good trace of the red line</p>
+                  	<div class="embed-responsive embed-responsive-16by9">
+					   <iframe width="560" height="315" src="https://www.youtube.com/embed/0BVZz96G44E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
+					</div>
+                  	<h4 class="mt-5 mb-3">Upgrading speed, starting from 0</h4>
+                  	<p>In the next video, we can see the behavior of the robot when it starts at 0 speed. This speed will increase until it stabilizes. Like it was said before.</p>
+                  	<div class="embed-responsive embed-responsive-16by9">
+					   <iframe width="560" height="315" src="https://www.youtube.com/embed/p3BWr_hSB80" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
+					</div>
+                  	
+                  	
+                  	
+                  	<!--<ol class="mb-5">
+					  <li class="mb-2">Lorem ipsum dolor sit amet consectetuer.</li>
+					  <li class="mb-2">Aenean commodo ligula eget dolor.</li>
+					  <li class="mb-2">Aenean massa cum sociis natoque penatibus.</li>
+					</ol>
+					<h5 class="my-3">Quote Example:</h5>
+					<blockquote class="blockquote m-lg-5 py-3 pl-4 px-lg-5">
+						<p class="mb-2">You might not think that programmers are artists, but programming is an extremely creative profession. It's logic-based creativity.</p>
+						<footer class="blockquote-footer">John Romero</footer>
+					</blockquote>
+					
+					<h5 class="my-3">Table Example:</h5>
+					<table class="table table-striped my-5">
+						<thead>
+							<tr>
+								<th scope="col">#</th>
+								<th scope="col">First</th>
+								<th scope="col">Last</th>
+								<th scope="col">Handle</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">1</th>
+								<td>Mark</td>
+								<td>Otto</td>
+								<td>@mdo</td>
+							</tr>
+							<tr>
+								<th scope="row">2</th>
+								<td>Jacob</td>
+								<td>Thornton</td>
+								<td>@fat</td>
+							</tr>
+							<tr>
+								<th scope="row">3</th>
+								<td>Larry</td>
+								<td>the Bird</td>
+								<td>@twitter</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<h5 class="mb-3">Embed A Tweet:</h5>
+					
+					<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">1969:<br>-what&#39;re you doing with that 2KB of RAM?<br>-sending people to the moon<br><br>2017:<br>-what&#39;re you doing with that 1.5GB of RAM?<br>-running Slack</p>&mdash; I Am Devloper (@iamdevloper) <a href="https://twitter.com/iamdevloper/status/926458505355235328?ref_src=twsrc%5Etfw">November 3, 2017</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+				    
+				    <h3 class="mt-5 mb-3">Video Example</h3>
+				    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. </p>
+
+				    <div class="embed-responsive embed-responsive-16by9">
+					   <iframe width="560" height="315" src="https://www.youtube.com/embed/hnCmSXCZEpU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
+					</div>-->
+				   
+			    </div>
+				    
+			    <nav class="blog-nav nav nav-justified my-5">
+				  <a class="nav-link-prev nav-item nav-link rounded-left" href="blog-post-P3.html">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+				  <a class="nav-link-next nav-item nav-link rounded-right" href="blog-post-P2.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+				</nav>
+				
+				
+				
+		    </div><!--//container-->
+	    </article>
+	    
+	    
+	    
+	    <footer class="footer text-center py-2 theme-bg-dark">
+		   
+	        <!--/* This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. Thank you for your support. :) If you'd like to use the template without the attribution, you can buy the commercial license via our website: themes.3rdwavemedia.com */-->
+                <small class="copyright">Universidad Rey Juan Carlos. Curso 2021-22</small>
+		   
+	    </footer>
+    
+    </div><!--//main-wrapper-->
+    
+
+    <!-- *****CONFIGURE STYLE (REMOVE ON YOUR PRODUCTION SITE)****** -->  
+    <div id="config-panel" class="config-panel d-none d-lg-block">
+        <div class="panel-inner">
+            <a id="config-trigger" class="config-trigger config-panel-hide text-center" href="#"><i class="fas fa-cog fa-spin mx-auto" data-fa-transform="down-6" ></i></a>
+            <h5 class="panel-title">Choose Colour</h5>
+            <ul id="color-options" class="list-inline mb-0">
+                <li class="theme-1 active list-inline-item"><a data-style="assets/css/theme-1.css" href="#"></a></li>
+                <li class="theme-2  list-inline-item"><a data-style="assets/css/theme-2.css" href="#"></a></li>
+                <li class="theme-3  list-inline-item"><a data-style="assets/css/theme-3.css" href="#"></a></li>
+                <li class="theme-4  list-inline-item"><a data-style="assets/css/theme-4.css" href="#"></a></li>
+                <li class="theme-5  list-inline-item"><a data-style="assets/css/theme-5.css" href="#"></a></li>
+                <li class="theme-6  list-inline-item"><a data-style="assets/css/theme-6.css" href="#"></a></li>
+                <li class="theme-7  list-inline-item"><a data-style="assets/css/theme-7.css" href="#"></a></li>
+                <li class="theme-8  list-inline-item"><a data-style="assets/css/theme-8.css" href="#"></a></li>
+            </ul>
+            <a id="config-close" class="close" href="#"><i class="fa fa-times-circle"></i></a>
+        </div><!--//panel-inner-->
+    </div><!--//configure-panel-->
+
+    
+       
+    <!-- Javascript -->          
+    <script src="assets/plugins/jquery-3.3.1.min.js"></script>
+    <script src="assets/plugins/popper.min.js"></script> 
+    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script> 
+    
+    <!-- Page Specific JS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="assets/js/blog.js"></script>
+    
+    <!-- Style Switcher (REMOVE ON YOUR PRODUCTION SITE) -->
+    <script src="assets/js/demo/style-switcher.js"></script>     
+    
+
+</body>
+</html> 
+
