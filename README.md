@@ -1,2 +1,2 @@
 # roboticsvision
-URJC Master's degree in Computer Vision
+URJC Master's degree in Computer Vision done by Jorge Pulido
