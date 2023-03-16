@@ -65,7 +65,7 @@
 		    <div class="container">
 			    <header class="blog-post-header">
 				    <h2 class="title mb-2">Follow Line</h2>
-				    <div class="meta mb-3"><span class="date">Last Update *Undefined*</span><span class="time">15 min read</span></div>
+				    <div class="meta mb-3"><span class="date">Last Update 1 day ago</span><span class="time">15 min read</span></div>
 			    </header>
 			    
 			    <div class="blog-post-body">
@@ -170,7 +170,7 @@ while True:
                   	<br>
                   	<p>When the path is differentiated from the rest of the circuit, a good continue is to go back to the default view but now with the path countour drawn.</p>
                   	<h5>Finding the reference point to get the error and apply the formula</h5>
-                  	<p>Now, it is time to look for some reference points, so that we can return the variable <b>error</b> for the PD formula.</p>	
+                  	<p>Now, it is time to look for some reference points, so that we can return the variable <b>error</b> for the PDI formula.</p>	
                   	<br>
                   	<center>
 						<img class="img-fluid" src="assets/images/P1/centroide.jpg" alt="Image: Contour with centroid view">
@@ -194,22 +194,26 @@ while True:
                   	<!--<p></p>-->
                   	<br>
                   	<center>
-						<img class="img-fluid" src="assets/images/P1/lieaerror.jpg" alt="Image: Error represented view">
+						<img class="img-fluid" src="assets/images/P1/lineaerror.jpg" alt="Image: Error represented view">
                   	</center>
                   	<br>
                   	<p>I did the same process for the three points like the one shown now. The line is conected to the pixel of the middle of the frame, making the length of that line the error, which is used in the formula.<br>
                        In summary, the longer the line is, the higher the error, and, that means, the value of the formula. On the other hand, if this length is short, the formula has a lower value making the robot get stable.</p>	
-                  	<p>At this point I was able to complete a lap at a constant low speed. So, it is time to develop how the speedometer is going to work.</p>
+                  	
+					<p>To get the difference of the error, i just save the current error in a variable to subtract it from the next error value, letting the robot get into position with less oscillations.</p>
+					<p>I use the same variable to add it to the next error value, this help us to delete the error if it maintains constant or gets higher.</p>
+					<p>After some tryout I get to a range of values for Kp, Kd and Ki, in which the robot can make a good trace.</p>
+					<p>So, at this point I was able to complete a lap at a constant low speed. So, it is time to develop how the speedometer is going to work.</p>
                   	<h5>How robot velocity works</h5>
                   	<!-- Robot sube velocidad -->
                   	<p>Speed increase slowly when the difference between current frame error and the previous one is low. It increase faster when the actual error in the current frame is 0, in most cases that means the robot is in a straight line.<br>
-                  	   On the other hand, there are two cases. The first one, consist of decreasing speed when the difference in the last two frames error is high,
+                  	   On the other hand, there are two cases. The first one, consists of decreasing speed when the difference in the last two frames error is high,
                   	   it also has an even higher speed decrease, when the current error is too high, almost a quarter of pixels of the frame. Making the robot re-establish quicker, as expected. </p>
                   	<div class="embed-responsive embed-responsive-16by9">
 					   <iframe width="560" height="315" src="https://www.youtube.com/embed/rZN6HS3yjkU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
 					</div>
                   	<br>
-                  	<p>At the end, the robot achieve to stablish around a range of values by itself, and can manage to continue driving around the circuit indefinitely.</p>
+                  	<p>At the end, the robot achieve to stablish around a similar range of values adjusting the speed by itself, and can manage to continue driving around the circuit indefinitely.</p>
                   	
                   	<h3 class="mt-5 mb-3">Experiments</h3>
                   	<p>In this section of the post I am going to explain some problems and experiments I found during the development of the exercise.</p>								<!-- Posibles mejoras-->
@@ -247,67 +251,16 @@ while True:
                   	<div class="embed-responsive embed-responsive-16by9">
 					   <iframe width="560" height="315" src="https://www.youtube.com/embed/p3BWr_hSB80" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
 					</div>
-                  	
-                  	
-                  	
-                  	<!--<ol class="mb-5">
-					  <li class="mb-2">Lorem ipsum dolor sit amet consectetuer.</li>
-					  <li class="mb-2">Aenean commodo ligula eget dolor.</li>
-					  <li class="mb-2">Aenean massa cum sociis natoque penatibus.</li>
-					</ol>
-					<h5 class="my-3">Quote Example:</h5>
-					<blockquote class="blockquote m-lg-5 py-3 pl-4 px-lg-5">
-						<p class="mb-2">You might not think that programmers are artists, but programming is an extremely creative profession. It's logic-based creativity.</p>
-						<footer class="blockquote-footer">John Romero</footer>
-					</blockquote>
-					
-					<h5 class="my-3">Table Example:</h5>
-					<table class="table table-striped my-5">
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">First</th>
-								<th scope="col">Last</th>
-								<th scope="col">Handle</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<th scope="row">1</th>
-								<td>Mark</td>
-								<td>Otto</td>
-								<td>@mdo</td>
-							</tr>
-							<tr>
-								<th scope="row">2</th>
-								<td>Jacob</td>
-								<td>Thornton</td>
-								<td>@fat</td>
-							</tr>
-							<tr>
-								<th scope="row">3</th>
-								<td>Larry</td>
-								<td>the Bird</td>
-								<td>@twitter</td>
-							</tr>
-						</tbody>
-					</table>
-					
-					<h5 class="mb-3">Embed A Tweet:</h5>
-					
-					<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">1969:<br>-what&#39;re you doing with that 2KB of RAM?<br>-sending people to the moon<br><br>2017:<br>-what&#39;re you doing with that 1.5GB of RAM?<br>-running Slack</p>&mdash; I Am Devloper (@iamdevloper) <a href="https://twitter.com/iamdevloper/status/926458505355235328?ref_src=twsrc%5Etfw">November 3, 2017</a></blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+					<h3>Conclusions</h3>
 
+					<p>Many tests have been done to improve the algorithm performance.
+                      The PD controller vs the PDI seems to be the same when it comes to timing laps, I can't really spot any difference, the opposite happens when I implement the D in the P controller.</p>
+					  <p>For the Kp value: if it is too high the robot twists so much, if it is too low, the robot can't even turn.</p>
+					  <p>For the Kd value: it needs to be in a accepted range, otherwise the robot will oscillate so much.</p>
+					  <p>For the Ki value: the only thing I can spot is that, if the curve is long the error tend to get smaller and gets the robot to oscillate a bit.</p>
 
-				    
-				    <h3 class="mt-5 mb-3">Video Example</h3>
-				    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. </p>
-
-				    <div class="embed-responsive embed-responsive-16by9">
-					   <iframe width="560" height="315" src="https://www.youtube.com/embed/hnCmSXCZEpU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>					
-					</div>-->
-				   
-			    </div>
+					  <p>About the speed: the robot is able to do a good performance until it start speeding faster than 5, I set a max value for speed to around 5,5 to avoid it gets out of the line.</p>
+					</div>
 				    
 			    <nav class="blog-nav nav nav-justified my-5">
 				  <a class="nav-link-prev nav-item nav-link rounded-left" href="blog-post-P3.html">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
@@ -324,7 +277,7 @@ while True:
 	    <footer class="footer text-center py-2 theme-bg-dark">
 		   
 	        <!--/* This template is released under the Creative Commons Attribution 3.0 License. Please keep the attribution link below when using for your own project. Thank you for your support. :) If you'd like to use the template without the attribution, you can buy the commercial license via our website: themes.3rdwavemedia.com */-->
-                <small class="copyright">Universidad Rey Juan Carlos. Curso 2022-23</small>
+                <small class="copyright">Universidad Rey Juan Carlos. Curso 2021-22</small>
 		   
 	    </footer>
     
